@@ -3,8 +3,9 @@
 Foi omitios alguns arquivos essenciais para o funcionamento das apis por motivo de segurança. Então vou mostrar quais arquivos você deve criar para que a aplicação funcione corretamente.
 
 ## Arquivos
-Foram omitdos as pastas *node_modules* mas isso é gerado automaticamente com o ***npm install*** e ***npm install --save-dev***.
+Foram omitidos as pastas *node_modules*, mas ela é gerada automaticamente com o ***npm install*** e ***npm install --save-dev***.
 
+Porém existe duas outras pastas que você será obrigado a criar na mão. Segue abaixo elas:
 ### Pasta api-likes
 Nela você precisa criar um arquivo chamado default.json na pasta config. Dentro desse arquivo está a URI de conexão com o banco MongoDB e o salt do jwt. O arquivo deve parecer com o json abaixo:
 

@@ -12,7 +12,7 @@ module.exports = (req,res,next)=>{
   }
 
   try {
-    const decoded = jwt.verify(toke,config.get("jwtSecret"));
+    const decoded = jwt.verify(token,config.get("jwtSecret"));
 
     if(decoded.user.is_admin !== config.get("adminSecret")){
       return res.status(401).json({

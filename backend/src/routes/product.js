@@ -5,6 +5,24 @@ const router = express.Router();
 const Product = require("../database/models/Product");
 
 
+
+// @route GET /product
+// @desc Get all products
+// @access Public 
+
+router.get("/",async(req,res)=>{
+  try {
+    const products = await Product.findAll();
+
+    res.json(products);
+  } catch (err) {
+   console.error(err.message);
+   res.status(500).send("Server error..."); 
+  }
+});
+
+
+
 // @route POST /product/
 // @desc Create new product
 // @access Private

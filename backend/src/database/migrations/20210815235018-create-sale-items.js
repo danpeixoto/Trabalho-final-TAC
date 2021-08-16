@@ -22,7 +22,7 @@ module.exports = {
         onUpdate: "CASCADE",
         onDELETE: "CASCADE",
       },
-      amout: {
+      amount: {
         allowNull: false,
         type: Sequelize.INTEGER,
       },

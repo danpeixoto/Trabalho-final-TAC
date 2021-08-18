@@ -4,8 +4,26 @@ const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 
 const User = require("../database/models/User");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
+
+// @route GET api/auth
+// @desc authenticate user with token
+// @access Public
+router.get("/", auth, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: { exclude: ["password"] },
+    });
+    res.json(user);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      msg: "Server error",
+    });
+  }
+});
 
 // @route POST /auth/
 // @desc Login user
@@ -66,13 +84,13 @@ router.post(
           res.json({
             token,
           });
-        }
+        },
       );
     } catch (err) {
       console.error(err.message);
       res.status(500).send("Server error...");
     }
-  }
+  },
 );
 
 module.exports = router;

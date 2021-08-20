@@ -1,4 +1,4 @@
-import { LOAD_ALL_PRODUCTS } from "../actions/types";
+import { LOAD_ALL_PRODUCTS, LOAD_SELECTED_PRODUCT } from "../actions/types";
 
 const initialState = {
   selectedProduct: null,
@@ -14,7 +14,11 @@ export default function (state = initialState, action) {
         ...state,
         allProducts: payload,
       };
-
+    case LOAD_SELECTED_PRODUCT:
+      return {
+        ...state,
+        selectedProduct: payload,
+      };
     default:
       return state;
   }

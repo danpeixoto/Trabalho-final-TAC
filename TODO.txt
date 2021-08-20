@@ -1,0 +1,5 @@
+Alterar estrutura do produto no banco para que ele aceite uma descrição
+
+Criar páginas faltantes
+
+Integrar api-likes na hora de mostrar o produto selecionado

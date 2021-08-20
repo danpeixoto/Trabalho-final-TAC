@@ -1,96 +1,125 @@
 const adminAuth = require("../middleware/adminAuth");
 const express = require("express");
-const {check, validationResult}  = require("express-validator");
+const { check, validationResult } = require("express-validator");
 const router = express.Router();
 const Product = require("../database/models/Product");
 
-
-
 // @route GET /product
 // @desc Get all products
-// @access Public 
+// @access Public
 
-router.get("/",async(req,res)=>{
+router.get("/", async (req, res) => {
   try {
     const products = await Product.findAll();
 
     res.json(products);
   } catch (err) {
-   console.error(err.message);
-   res.status(500).send("Server error..."); 
+    console.error(err.message);
+    res.status(500).send("Server error...");
   }
 });
 
+// @route GET /product/:id
+// @desc Get product by id
+// @access Public
 
+router.get("/:id", async (req, res) => {
+  try {
+    const product = await Product.findByPk(req.params.id);
+
+    if (!product) {
+      return res.status(400).json({ msg: "Product not found" });
+    }
+
+    res.json(product);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error...");
+  }
+});
 
 // @route POST /product/
 // @desc Create new product
 // @access Private
-router.post("/",[adminAuth,
-[
-	check("name","Please include a name").not().isEmpty(),
-	check("category","Please include a category").not().isEmpty(),
-	check("total_available","Please include an integer").isInt(),
-	check("value","Please include a floating-point value").isFloat(),
-]
-], 
-async (req,res)=>{
-	const errors = validationResult(req);
+router.post(
+  "/",
+  [
+    adminAuth,
+    [
+      check("name", "Please include a name").not().isEmpty(),
+      check("category", "Please include a category").not().isEmpty(),
+      check("total_available", "Please include an integer").isInt(),
+      check("value", "Please include a floating-point value").isFloat(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
 
-	if(!errors.isEmpty()){
-		return res.status(400).json({errors:errors.array()});
-	}
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-	const {name,category,total_available,value} = req.body;
+    const { name, category, total_available, value } = req.body;
 
-	try {
-		const newProduct = await Product.create({name,category,total_available,value});
+    try {
+      const newProduct = await Product.create({
+        name,
+        category,
+        total_available,
+        value,
+      });
 
-		res.json(newProduct);
-	} catch (err) {
-		console.log(err.message);
-		res.status(500).send("Server error...");
-	}
-
-});
+      res.json(newProduct);
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send("Server error...");
+    }
+  },
+);
 
 // @route PUT /product/:product_id
 // @desc Update a product by it's id
 // @access Private
-router.put("/:product_id",[adminAuth,
-	[
-		check("name","Please include a name").not().isEmpty(),
-		check("category","Please include a category").not().isEmpty(),
-		check("total_available","Please include an integer").isInt(),
-		check("value","Please include a floating-point value").isFloat(),
-	]
-	], 
-	async (req,res)=>{
-		const errors = validationResult(req);
-	
-		if(!errors.isEmpty()){
-			return res.status(400).json({errors:errors.array()});
-		}
-	
-		const {name,category,total_available,value} = req.body;
-		const product_id = req.params.product_id;
-		try {
-			const productExists = await Product.findByPk(product_id);
-		
-			if(!productExists){
-				return res.status(400).json({
-					errors:[{msg:"Product not found"}]
-				});
-			}
+router.put(
+  "/:product_id",
+  [
+    adminAuth,
+    [
+      check("name", "Please include a name").not().isEmpty(),
+      check("category", "Please include a category").not().isEmpty(),
+      check("total_available", "Please include an integer").isInt(),
+      check("value", "Please include a floating-point value").isFloat(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
 
-			const product = await Product.update({name,category,total_available,value},{where:{id:product_id},returning:true});
-		
-			res.json(product[1][0]);
-		} catch (err) {
-			console.log(err.message);
-			res.status(500).send("Server error...");
-		}
-	
-	});
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, category, total_available, value } = req.body;
+    const product_id = req.params.product_id;
+    try {
+      const productExists = await Product.findByPk(product_id);
+
+      if (!productExists) {
+        return res.status(400).json({
+          errors: [{ msg: "Product not found" }],
+        });
+      }
+
+      const product = await Product.update(
+        { name, category, total_available, value },
+        { where: { id: product_id }, returning: true },
+      );
+
+      res.json(product[1][0]);
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send("Server error...");
+    }
+  },
+);
 
 module.exports = router;

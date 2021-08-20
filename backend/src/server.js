@@ -1,8 +1,10 @@
 require("./database");
 const express = require("express");
+const cors = require("cors");
 const server = express();
 
 server.use(express.json());
+server.use(cors());
 
 server.use("/auth", require("./routes/auth"));
 server.use("/user", require("./routes/user"));

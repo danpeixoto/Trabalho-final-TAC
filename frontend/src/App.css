@@ -1,38 +1,209 @@
-.App {
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  background-color: #eaeded;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+.btn {
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+/* NAVBAR */
+header {
+  padding: 0 20px;
+  background-color: gold;
+}
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav__img {
+  display: block;
+}
+
+.nav__form {
+  position: relative;
+  height: 100%;
+}
+.nav__input {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  min-width: 350px;
+  height: 100%;
+  min-height: 35px;
+  padding: 2px 10px;
+  border: none;
+  border-radius: 0;
+  outline: none;
+}
+
+.nav__search-btn {
+  font-size: 16px;
+  opacity: 1;
+  position: absolute;
+  height: 100%;
+  min-height: 35px;
+  background-color: #fff;
+  padding-left: 2px;
+  transform: translateX(0);
+  transition: 600ms;
+  transition-property: opacity, transform;
+}
+
+.nav__search-btn--hidden {
+  transform: translateX(-45px);
+  opacity: 0;
+}
+
+.nav__user-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  gap: 20px;
+}
+
+/* Product Item */
+.product-item {
+  background-color: #fff;
+  border-radius: 5px;
+  display: grid;
+  grid-template-columns: repeat(2, [col-start] min-content [col-end]);
+  min-height: 200px;
+  align-items: center;
+}
+.product-item__img {
+  grid-column: col-start 1 / col-end 2;
+  justify-self: center;
+  width: 250px;
+}
+.product-item__name {
+  grid-column: col-start 1 / col-end 2;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.product-item__about {
+  grid-column: col-start 1 / col-end 2;
+  align-self: end;
+  background-color: goldenrod;
+  text-align: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Home */
+
+.home__products {
+  width: 75%;
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    [col-start] minmax(min-content, 200px) [col-end]
+  );
+  /* grid-template-columns: repeat(auto-fit, minmax(30px, 1fr)); */
+  justify-content: center;
+  gap: 40px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Product */
+.product {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min-content, 600px));
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  margin-top: 50px;
+  gap: 30px;
+}
+.product > * {
+  align-self: start;
+  justify-self: center;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.product__left {
+  display: grid;
+  grid-template-columns: repeat(2, [col-start] 1fr [col-end]);
+  gap: 20px;
+  font-size: 24px;
+}
+.left__img,
+.product__cta {
+  grid-column: col-start 1 / col-end 2;
+  justify-self: center;
+}
+.left__img {
+  width: 200px;
+  height: 200px;
+}
+.left__value-text {
+  padding-left: 10px;
+}
+.left__value-price {
+  padding-right: 10px;
+  justify-self: end;
+}
+.product__cta {
+  background-color: #3483fa;
+  font-size: 30px;
+  text-align: center;
+  color: #fff;
+  border-radius: 5px;
+  padding: 5px 15px;
+}
+.product__name {
+  font-size: 32px;
+  text-transform: uppercase;
+}
+
+/* Login */
+.login,
+.login__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.login {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  background-color: #fff;
+  padding: 50px;
 }
 
-.App-link {
-  color: #61dafb;
+.login__title {
+  margin-bottom: 20px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.login__form {
+  justify-items: center;
+  width: 100%;
+}
+.login__input {
+  width: 100%;
+  margin: 5px 0;
 }

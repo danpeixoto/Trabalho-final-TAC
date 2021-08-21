@@ -1,17 +1,29 @@
 import React, { useState } from "react";
+import { registerUser } from "../../actions/users";
+import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
-const Register = () => {
+const Register = ({ isAuthenticated, registerUser }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    password2: "",
     name: "",
   });
-  const { email, name, password } = formData;
-  const onChange = (e) => setFormData({ [e.target.name]: e.target.value });
+  const { email, name, password, password2 } = formData;
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(password, email);
+    if (password === password2) {
+      registerUser(email, name, password);
+    }
   };
+
+  if (isAuthenticated) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <div className="login">
       <h1 className="login__title">
@@ -44,6 +56,15 @@ const Register = () => {
           required
           className="login__input"
           placeholder="Digite sua senha aqui"
+        />{" "}
+        <input
+          type="password"
+          name="password2"
+          value={password2}
+          onChange={(e) => onChange(e)}
+          required
+          className="login__input"
+          placeholder="Digite novamente sua senha aqui"
         />
         <input type="submit" value="Entrar" className="login__input" />
       </form>
@@ -51,4 +72,8 @@ const Register = () => {
   );
 };
 
-export default Register;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.user.isAuthenticated,
+});
+
+export default connect(mapStateToProps, { registerUser })(Register);

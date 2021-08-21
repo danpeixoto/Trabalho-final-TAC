@@ -1,17 +1,24 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
-const Login = () => {
+import { Link, Redirect } from "react-router-dom";
+import { login } from "../../actions/users";
+import { connect } from "react-redux";
+const Login = ({ isAuthenticated, login }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const { password, email } = formData;
-  const onChange = (e) => setFormData({ [e.target.name]: e.target.value });
+  const onChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log(password, email);
+    login(email, password);
   };
+
+  if (isAuthenticated) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <div className="login">
       <h1 className="login__title">
@@ -43,4 +50,8 @@ const Login = () => {
   );
 };
 
-export default Login;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.user.isAuthenticated,
+});
+
+export default connect(mapStateToProps, { login })(Login);

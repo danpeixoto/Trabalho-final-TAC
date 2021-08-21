@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { connect } from "react-redux";
+import { logout } from "../../actions/users";
 import Logo from "../../logo.png";
-const Navbar = () => {
+
+const Navbar = ({ isAuthenticated, logout }) => {
   const [productQuery, setProductQuery] = useState("");
   const history = useHistory();
   const onChange = (e) => {
@@ -13,6 +16,30 @@ const Navbar = () => {
     history.replace(`/searched-products/${productQuery}`);
   };
 
+  const logoutUser = () => logout();
+
+  const guestOptions = () => (
+    <ul className="nav__user-options">
+      <li className="user-options__item">
+        <Link to="/login">Login</Link>
+      </li>
+      <li className="user-options__item">
+        <Link to="/register">Criar conta</Link>
+      </li>
+    </ul>
+  );
+  const authenticatedUserOptions = () => (
+    <ul className="nav__user-options">
+      <li className="user-options__item">
+        <Link to="/">Minhas compras</Link>
+      </li>
+      <li className="user-options__item">
+        <button className="btn" onClick={logoutUser}>
+          Logout
+        </button>
+      </li>
+    </ul>
+  );
   return (
     <header>
       <nav className="nav">
@@ -37,17 +64,14 @@ const Navbar = () => {
           />
         </form>
 
-        <ul className="nav__user-options">
-          <li className="user-options__item">
-            <Link to="/login">Login</Link>
-          </li>
-          <li className="user-options__item">
-            <Link to="/register">Criar conta</Link>
-          </li>
-        </ul>
+        {isAuthenticated ? authenticatedUserOptions() : guestOptions()}
       </nav>
     </header>
   );
 };
 
-export default Navbar;
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.user.isAuthenticated,
+});
+
+export default connect(mapStateToProps, { logout })(Navbar);

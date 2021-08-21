@@ -1,5 +1,5 @@
 import "./App.css";
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
 import Navbar from "./components/layout/Navbar";
@@ -10,8 +10,18 @@ import Login from "./components/pages/Login";
 import Product from "./components/pages/Product";
 import store from "./store";
 import SearchedProducts from "./components/pages/SearchedProducts";
+import { loadUser } from "./actions/users";
+import setAuthToken from "./utils/setAuthToken";
+
+if (localStorage.getItem("token")) {
+  setAuthToken(localStorage.token);
+}
 
 function App() {
+  useEffect(() => {
+    store.dispatch(loadUser());
+  }, []);
+
   return (
     <Provider store={store}>
       <Router>

@@ -9,7 +9,7 @@ const Home = ({ loadAllProducts, allProducts }) => {
   }, []);
 
   return (
-    <div className="home__products">
+    <div className="products">
       {allProducts.map((product) => (
         <ProductItem key={product.id} {...product} />
       ))}

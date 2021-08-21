@@ -11,12 +11,8 @@ const Product = ({ selectedProduct, loadSelectedProduct, match }) => {
     loadSelectedProduct(match.params.id);
   }, []);
   const images = [Imagem1, Imagem2, Imagem3, Imagem4];
-
+  //  TODO : pensar numa maneira de utilizar o estado loading
   if (!selectedProduct) {
-    return <div className="product">Produto Carregando...</div>;
-  }
-
-  if (selectedProduct.id != match.params.id) {
     return <div className="product">Produto Carregando...</div>;
   }
 
@@ -40,12 +36,7 @@ const Product = ({ selectedProduct, loadSelectedProduct, match }) => {
         <h2>Nota média: 5/5</h2>
         <div className="product__description">
           <h2>Descrição</h2>
-          <p className="description__text">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ad
-            assumenda sapiente impedit numquam. Quo nulla odio perspiciatis
-            nostrum blanditiis ipsam ex sed praesentium eveniet repudiandae, rem
-            sequi soluta optio voluptatem.
-          </p>
+          <p className="description__text">{selectedProduct.description}</p>
         </div>
       </div>
     </div>

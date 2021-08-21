@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Logo from "../../logo.png";
 const Navbar = () => {
   const [productQuery, setProductQuery] = useState("");
-
+  const history = useHistory();
   const onChange = (e) => {
     setProductQuery(e.target.value);
   };
 
-  const onSubmit = (e) => e.preventDefault();
+  const onSubmit = (e) => {
+    e.preventDefault();
+    history.replace(`/searched-products/${productQuery}`);
+  };
 
   return (
     <header>

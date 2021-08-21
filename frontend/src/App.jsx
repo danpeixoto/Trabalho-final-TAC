@@ -9,6 +9,7 @@ import Home from "./components/pages/Home";
 import Login from "./components/pages/Login";
 import Product from "./components/pages/Product";
 import store from "./store";
+import SearchedProducts from "./components/pages/SearchedProducts";
 
 function App() {
   return (
@@ -18,6 +19,11 @@ function App() {
         <section className="container">
           <Switch>
             <Route exact path="/" component={Home} />
+            <Route
+              exact
+              path="/searched-products/:name"
+              component={SearchedProducts}
+            />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/admin" component={Admin} />

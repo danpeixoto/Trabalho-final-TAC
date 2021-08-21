@@ -31,7 +31,7 @@ const Navbar = ({ isAuthenticated, logout }) => {
   const authenticatedUserOptions = () => (
     <ul className="nav__user-options">
       <li className="user-options__item">
-        <Link to="/">Minhas compras</Link>
+        <Link to="/my-purchases">Minhas compras</Link>
       </li>
       <li className="user-options__item">
         <button className="btn" onClick={logoutUser}>

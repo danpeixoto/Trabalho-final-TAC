@@ -12,6 +12,7 @@ import store from "./store";
 import SearchedProducts from "./components/pages/SearchedProducts";
 import { loadUser } from "./actions/users";
 import setAuthToken from "./utils/setAuthToken";
+import UserSales from "./components/pages/UserSales";
 
 if (localStorage.getItem("token")) {
   setAuthToken(localStorage.token);
@@ -34,6 +35,7 @@ function App() {
               path="/searched-products/:name"
               component={SearchedProducts}
             />
+            <Route exact path="/my-purchases" component={UserSales} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/admin" component={Admin} />

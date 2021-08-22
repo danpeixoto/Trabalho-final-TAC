@@ -19,6 +19,7 @@ const Product = ({
   }, []);
 
   const [amount, setAmount] = useState(1);
+  const [stars, setStars] = useState(1);
   const [imageIndex, setImageIndex] = useState(Math.floor(Math.random() * 4));
   const [bought, setBought] = useState(false);
 
@@ -26,7 +27,7 @@ const Product = ({
 
   const buyProduct = () => {
     if (isAuthenticated) {
-      newSale(selectedProduct.id, amount);
+      newSale(selectedProduct.id, amount, stars);
       setTimeout(() => setBought(true), 2000);
     } else {
       console.log("k");
@@ -45,20 +46,29 @@ const Product = ({
     <div className="product">
       <div className="product__left">
         <img src={images[imageIndex]} alt="" className="left__img" />
-        <p className="left__value-text">Valor</p>
+        <p className="left__text">Valor:</p>
         <p className="left__value-price">
           R$
           {selectedProduct.value}
         </p>
-        <p className="left__quantity-text">Quantidade</p>
+        <p className="left__text">Quantidade:</p>
         <input
           className="left__input"
           type="number"
           name="amount"
-          id=""
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           min="1"
+        />
+        <p className="left__text">Nota:</p>
+        <input
+          className="left__input"
+          type="number"
+          name="stars"
+          value={stars}
+          onChange={(e) => setStars(e.target.value)}
+          min="1"
+          max="5"
         />
         <button className="btn product__cta" onClick={buyProduct}>
           Comprar agora
@@ -66,7 +76,12 @@ const Product = ({
       </div>
       <div className="product__right">
         <h1 className="product__name">{selectedProduct.name}</h1>
-        <h2>Nota média: 5/5</h2>
+        <h2>
+          Nota média:{" "}
+          {selectedProduct.avg_likes > 0
+            ? `${selectedProduct.avg_likes} / 5`
+            : "Nenhuma nota foi atribuida a esse produto"}
+        </h2>
         <h3>Categoria: {selectedProduct.category}</h3>
         <div className="product__description">
           <h2>Descrição</h2>

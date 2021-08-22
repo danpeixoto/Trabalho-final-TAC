@@ -11,10 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "config": "^3.3.6",
-    "cors": "^2.8.5",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.7",
-    "restify": "^8.5.1"
+    "restify": "^8.5.1",
+    "restify-cors-middleware2": "^2.1.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"

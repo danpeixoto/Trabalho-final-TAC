@@ -48,13 +48,15 @@ export const searchProductsByName = (name) => async (dispatch) => {
 };
 
 export const loadSelectedProduct = (id) => async (dispatch) => {
+  console.log(axios.defaults.headers.common);
   try {
     const res = await axios.get(
       `http://localhost:4000/product/search-one/${id}`,
     );
+    const res2 = await axios.get(`http://localhost:5000/like/${id}`);
     dispatch({
       type: LOAD_SELECTED_PRODUCT,
-      payload: res.data,
+      payload: { ...res.data, ...res2.data },
     });
   } catch (err) {
     dispatch({

@@ -2,7 +2,7 @@ import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
 import { SALES_QUERY_FAIL, SALES_QUERY_SUCCESS } from "./types";
 
-export const newSale = async (id, amount) => {
+export const newSale = async (id, amount, stars) => {
   if (localStorage.token) {
     setAuthToken(localStorage.token);
   }
@@ -12,20 +12,18 @@ export const newSale = async (id, amount) => {
     },
   };
   const body = JSON.stringify({ products: [{ id, amount }] });
-
+  const likeBody = JSON.stringify({ productId: id, stars });
   try {
     const res = await axios.post("http://localhost:4000/sale", body, config);
-    // dispatch({
-    //   type: SALE_SUCCESS,
-    //   payload: res.data,
-    // });
+    const res2 = await axios.post(
+      "http://localhost:5000/like",
+      likeBody,
+      config,
+    );
+    console.log(res2.data);
     console.log(res.data);
   } catch (err) {
     console.error(err);
-    // dispatch({
-    //   type: SALE_FAIL,
-    //   payload: res.data,
-    // });
   }
 };
 

@@ -54,10 +54,14 @@ const getItemAvgLike = async (req, res, next) => {
   const { product_id: productId } = req.params;
 
   try {
-    const product = await Product.findOne({ productId });
+    let product = await Product.findOne({ productId });
     if (!product) {
-      res.send(400, { msg: "Product not found" });
-      return next();
+      product = new Product({
+        productId,
+        likes: [],
+        avg_likes: 0.0,
+      });
+      await product.save();
     }
 
     res.json({ avg_likes: product.avg_likes });

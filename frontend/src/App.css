@@ -212,3 +212,36 @@ header {
   width: 100%;
   margin: 5px 0;
 }
+
+/* User purchases */
+.user-sales {
+  color: #3e3e3e;
+  background-color: #fff;
+  align-self: flex-start;
+  margin-top: 50px;
+}
+
+.user-sales__item {
+  border: 2px solid #3e3e3e;
+}
+.user-sales__item > p,
+.user-sales__item:not(:last-child) {
+  margin-bottom: 10px;
+}
+.user-sales__title {
+  font-size: 58px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.user-sales__date {
+  margin-bottom: 0;
+  padding: 10px;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 26px;
+}
+.user-sales__amount,
+.user-sales__price {
+  padding-left: 20px;
+  font-size: 20px;
+}

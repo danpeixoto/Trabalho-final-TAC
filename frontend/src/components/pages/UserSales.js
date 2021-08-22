@@ -1,26 +1,38 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router";
 import { getAllSales } from "../../actions/sale";
-
-const UserSales = ({ sales, getAllSales }) => {
+const UserSales = ({ isAuthenticated, sales, getAllSales }) => {
   useEffect(() => {
     getAllSales();
   }, []);
+
+  if (!isAuthenticated) {
+    return <Redirect to="/" />;
+  }
+
   return (
-    <Fragment>
-      <h1>Minhas compras</h1>
+    <div className="user-sales">
+      <h1 className="user-sales__title">Minhas compras</h1>
       {sales.map((sale) => (
-        <div>
-          <h2>Compra realizada em {sale.sale_date}</h2>
-          <p>Quantidade de produtos: {sale.total_items}</p>
-          <p>Total:{sale.total_value}</p>
+        <div key={sale.id} className="user-sales__item">
+          <h2 className="user-sales__date">
+            Compra realizada em: {new Date(sale.sale_date).toLocaleString()}
+          </h2>
+          <p className="user-sales__amount">
+            Quantidade de produtos: {sale.total_items}
+          </p>
+          <p className="user-sales__price">
+            Total: R${`${sale.total_value}`.replace(".", ",")}
+          </p>
         </div>
       ))}
-    </Fragment>
+    </div>
   );
 };
 
 const mapStateToProps = (state) => ({
   sales: state.sale.allSales,
+  isAuthenticated: state.user.isAuthenticated,
 });
 export default connect(mapStateToProps, { getAllSales })(UserSales);

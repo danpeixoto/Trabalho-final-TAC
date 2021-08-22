@@ -19,12 +19,11 @@ export default function (state = initialState, action) {
 
   switch (type) {
     case USER_LOADED:
-      // console.log(USER_LOADED);
       return {
         ...state,
         isAuthenticated: true,
         isLoading: false,
-        isAdmin: payload.isAdmin,
+        isAdmin: payload.is_admin,
         user: payload,
       };
     case LOGIN_SUCCESS:

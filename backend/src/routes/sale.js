@@ -89,12 +89,23 @@ router.post(
         console.log(product.id);
         let productResult = await Product.findByPk(product.id);
 
+        if (product.amount > productResult.total_available) {
+          return res.status(400).json({
+            errors: [{ msg: "Quantity exceeds total available" }],
+          });
+        }
+
         let saleItem = await SaleItem.create({
           sale_id: sale.id,
           product_id: productResult.id,
           amount: product.amount,
           value: productResult.value,
         });
+
+        await Product.update(
+          { total_available: productResult.total_available - product.amount },
+          { where: { id: productResult.id } },
+        );
 
         saleItems.push(saleItem);
       }

@@ -5,21 +5,6 @@ const router = express.Router();
 const Product = require("../database/models/Product");
 const { Op } = require("sequelize");
 
-// @route GET /product
-// @desc Get all products
-// @access Public
-
-router.get("/", async (req, res) => {
-  try {
-    const products = await Product.findAll();
-
-    res.json(products);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Server error...");
-  }
-});
-
 // @route GET /product/search-one/:id
 // @desc Get product by id
 // @access Public
@@ -45,7 +30,13 @@ router.get("/search-one/:id", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const products = await Product.findAll();
+    const products = await Product.findAll({
+      where: {
+        total_available: {
+          [Op.gt]: 0,
+        },
+      },
+    });
 
     res.json(products);
   } catch (err) {
@@ -76,6 +67,9 @@ router.post(
         where: {
           name: {
             [Op.iLike]: `%${searched_name}%`,
+          },
+          total_available: {
+            [Op.gt]: 0,
           },
         },
       });
@@ -111,7 +105,7 @@ router.post(
   ],
   async (req, res) => {
     const errors = validationResult(req);
-
+    console.log("Entrei aqui");
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }

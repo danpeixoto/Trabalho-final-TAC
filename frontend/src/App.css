@@ -245,3 +245,31 @@ header {
   padding-left: 20px;
   font-size: 20px;
 }
+
+/* Admin */
+
+.admin {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.admin h1 {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 48;
+}
+
+.admin__update {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+.admin__update input {
+  max-width: 50px;
+}
+
+.admin__form {
+  display: flex;
+  flex-direction: column;
+}

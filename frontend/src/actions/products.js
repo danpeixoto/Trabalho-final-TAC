@@ -48,7 +48,6 @@ export const searchProductsByName = (name) => async (dispatch) => {
 };
 
 export const loadSelectedProduct = (id) => async (dispatch) => {
-  console.log(axios.defaults.headers.common);
   try {
     const res = await axios.get(
       `http://localhost:4000/product/search-one/${id}`,

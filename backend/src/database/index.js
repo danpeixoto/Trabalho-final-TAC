@@ -12,7 +12,6 @@ Product.init(connection);
 Sale.init(connection);
 SaleItem.init(connection);
 
-
 User.associate(connection.models);
 Sale.associate(connection.models);
 Product.associate(connection.models);

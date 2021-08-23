@@ -13,7 +13,10 @@ const router = express.Router();
 router.get("/", auth, async (req, res) => {
   try {
     const { id: user_id } = req.user;
-    const sales = await Sale.findAll({ where: { user_id } });
+    const sales = await Sale.findAll({
+      where: { user_id },
+      order: [["id", "DESC"]],
+    });
 
     res.json(sales);
   } catch (err) {
@@ -34,10 +37,14 @@ router.get("/:sale_id", auth, async (req, res) => {
       return res.status(400).json({ msg: "Sale not found" });
     }
 
-    const saleItems = await SaleItem.findAll({ where: { sale_id: sale.id } });
+    const saleItems = await SaleItem.findAll({
+      include: [{ model: Product, as: "product" }],
+      where: { sale_id: sale.id },
+      nest: true,
+    });
 
     res.json({
-      ...saleItems,
+      products: [...saleItems],
       total_value: sale.total_value,
       total_items: sale.total_items,
     });
@@ -83,12 +90,11 @@ router.post(
         sale_date: Date.now(),
         total_value: 0,
       });
+
       const saleItems = [];
       // TODO: pedir para o professor a melhor maneira de implementar essa parte
       for (let product of products) {
-        console.log(product.id);
         let productResult = await Product.findByPk(product.id);
-
         if (product.amount > productResult.total_available) {
           return res.status(400).json({
             errors: [{ msg: "Quantity exceeds total available" }],

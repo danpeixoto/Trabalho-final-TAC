@@ -31,7 +31,20 @@ const Navbar = ({ isAuthenticated, logout }) => {
   const authenticatedUserOptions = () => (
     <ul className="nav__user-options">
       <li className="user-options__item">
-        <Link to="/my-purchases">Minhas compras</Link>
+        <Link to="/my-purchases">
+          <span aria-label="icon" role="img">
+            &#x1F4E6;
+          </span>
+          Minhas compras
+        </Link>
+      </li>
+      <li className="user-options__item">
+        <Link to="/cart">
+          <span aria-label="icon" role="img">
+            &#128722;
+          </span>
+          Carrinho
+        </Link>
       </li>
       <li className="user-options__item">
         <button className="btn" onClick={logoutUser}>

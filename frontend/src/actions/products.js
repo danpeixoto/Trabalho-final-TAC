@@ -58,9 +58,22 @@ export const loadSelectedProduct = (id) => async (dispatch) => {
       payload: { ...res.data, ...res2.data },
     });
   } catch (err) {
+    console.log(err.response.data);
     dispatch({
       type: LOAD_SELECTED_PRODUCT,
       payload: null,
     });
+  }
+};
+
+export const addProductToCart = (product) => {
+  if (localStorage.cart) {
+    console.log(localStorage.cart);
+    localStorage.setItem(
+      "cart",
+      JSON.stringify([...JSON.parse(localStorage.cart), product]),
+    );
+  } else {
+    localStorage.setItem("cart", JSON.stringify([product]));
   }
 };

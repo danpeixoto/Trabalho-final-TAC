@@ -83,7 +83,7 @@ router.post(
     try {
       const total_items = products
         .map((product) => product.amount)
-        .reduce((acc, cur) => acc + cur);
+        .reduce((acc, cur) => parseInt(acc, 10) + parseInt(cur, 10));
       let sale = await Sale.create({
         user_id,
         total_items,

@@ -13,7 +13,7 @@ const UserCart = ({ isAuthenticated }) => {
 
       setTimeout(() => {
         setBought(true);
-      }, 2000);
+      }, 1500);
     } else {
       console.log("tchau");
     }

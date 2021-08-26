@@ -1,5 +1,6 @@
 import axios from "axios";
 import setAuthToken from "../utils/setAuthToken";
+import { setAlert } from "./alert";
 import {
   AUTH_ERROR,
   LOGIN_SUCCESS,
@@ -45,10 +46,13 @@ export const login = (email, password) => async (dispatch) => {
       payload: res.data,
     });
     dispatch(loadUser());
-  } catch (error) {
+  } catch (err) {
     dispatch({
       type: AUTH_ERROR,
     });
+    const errors = err.response.data.errors;
+
+    errors.forEach((error) => dispatch(setAlert(error.msg)));
   }
 };
 export const logout = () => (dispatch) => {
@@ -72,9 +76,12 @@ export const registerUser = (email, name, password) => async (dispatch) => {
       payload: res.data,
     });
     dispatch(loadUser());
-  } catch (error) {
+  } catch (err) {
     dispatch({
       type: REGISTER_FAIL,
     });
+    const errors = err.response.data.errors;
+
+    errors.forEach((error) => dispatch(setAlert(error.msg)));
   }
 };

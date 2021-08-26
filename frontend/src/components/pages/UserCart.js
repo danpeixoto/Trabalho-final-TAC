@@ -4,18 +4,12 @@ import { connect } from "react-redux";
 import { newSale } from "../../actions/sale";
 import { Redirect } from "react-router-dom";
 
-const UserCart = ({ isAuthenticated }) => {
+const UserCart = ({ isAuthenticated, newSale }) => {
   const [bought, setBought] = useState(false);
 
-  const buyProducts = () => {
+  const buyProducts = async () => {
     if (isAuthenticated) {
-      newSale(productsArray);
-
-      setTimeout(() => {
-        setBought(true);
-      }, 1500);
-    } else {
-      console.log("tchau");
+      setBought(await newSale(productsArray));
     }
   };
 
@@ -66,4 +60,4 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.user.isAuthenticated,
 });
 
-export default connect(mapStateToProps, {})(UserCart);
+export default connect(mapStateToProps, { newSale })(UserCart);

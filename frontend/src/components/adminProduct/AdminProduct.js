@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import setAuthToken from "../../utils/setAuthToken";
+import { setAlert } from "../../actions/alert";
+import store from "../../store";
 
 const AdminProduct = ({ id, updateStates }) => {
   useEffect(() => {
@@ -26,6 +28,8 @@ const AdminProduct = ({ id, updateStates }) => {
       setFormData({ name, category, description, total_available, value });
     } catch (err) {
       updateStates(false, false);
+      const errors = err.response.data.errors;
+      errors.forEach((error) => store.dispatch(setAlert(error.msg)));
     }
   };
 
@@ -47,8 +51,9 @@ const AdminProduct = ({ id, updateStates }) => {
         await axios.post("http://localhost:4000/product", body, config);
       }
       updateStates(false, false);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      const errors = err.response.data.errors;
+      errors.forEach((error) => store.dispatch(setAlert(error.msg)));
     }
   };
   const onChange = (e) => {

@@ -1,8 +1,10 @@
 import axios from "axios";
+import { clearCart } from "../utils/clearCart";
 import setAuthToken from "../utils/setAuthToken";
+import { setAlert } from "./alert";
 import { SALES_QUERY_FAIL, SALES_QUERY_SUCCESS } from "./types";
 
-export const newSale = async (products) => {
+export const newSale = (products) => async (dispatch) => {
   if (localStorage.token) {
     setAuthToken(localStorage.token);
   }
@@ -26,10 +28,12 @@ export const newSale = async (products) => {
       });
       await axios.post("http://localhost:5000/like", likeBody, config);
     }
-
-    localStorage.removeItem("cart");
+    clearCart();
+    return true;
   } catch (err) {
-    console.error(err);
+    const errors = err.response.data.errors;
+    errors.forEach((error) => dispatch(setAlert(error.msg)));
+    return false;
   }
 };
 
@@ -51,6 +55,9 @@ export const getAllSales = () => async (dispatch) => {
     dispatch({
       type: SALES_QUERY_FAIL,
     });
+    const errors = err.response.data.errors;
+
+    errors.forEach((error) => dispatch(setAlert(error.msg)));
   }
 };
 

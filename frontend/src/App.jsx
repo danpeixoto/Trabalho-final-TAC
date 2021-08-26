@@ -14,6 +14,7 @@ import { loadUser } from "./actions/users";
 import setAuthToken from "./utils/setAuthToken";
 import UserSales from "./components/pages/UserSales";
 import UserCart from "./components/pages/UserCart";
+import Alert from "./components/layout/Alert";
 
 if (localStorage.getItem("token")) {
   setAuthToken(localStorage.token);
@@ -28,6 +29,7 @@ function App() {
     <Provider store={store}>
       <Router>
         <Navbar />
+        <Alert />
         <section className="container">
           <Switch>
             <Route exact path="/" component={Home} />

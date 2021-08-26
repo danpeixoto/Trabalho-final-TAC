@@ -10,3 +10,5 @@ export const LOGOUT = "LOGOUT";
 export const SALE_SUCCESS = "SALE_SUCCESS";
 export const SALES_QUERY_SUCCESS = "SALES_QUERY_SUCCESS";
 export const SALES_QUERY_FAIL = "SALES_QUERY_FAIL";
+export const REMOVE_ALERT = "REMOVE_ALERT";
+export const SET_ALERT = "SET_ALERT";

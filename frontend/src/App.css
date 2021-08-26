@@ -328,3 +328,20 @@ header {
   grid-column: 1/-1;
   margin-bottom: 10px;
 }
+
+/* Alert */
+
+.alert {
+  width: 100%;
+  text-align: center;
+  display: block;
+  background-color: rgb(214, 68, 68);
+  color: #fff;
+  font-size: 42px;
+}
+
+.alert p::before {
+  content: "❌";
+  font-size: 38px;
+  display: inline;
+}

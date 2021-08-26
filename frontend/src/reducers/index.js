@@ -2,5 +2,5 @@ import { combineReducers } from "redux";
 import products from "./products";
 import user from "./user";
 import sale from "./sale";
-
-export default combineReducers({ products, user, sale });
+import alert from "./alert";
+export default combineReducers({ alert, products, user, sale });

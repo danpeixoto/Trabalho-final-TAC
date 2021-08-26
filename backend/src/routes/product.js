@@ -1,12 +1,17 @@
 const adminAuth = require("../middleware/Auth/adminAuth");
 const express = require("express");
-const { check, validationResult } = require("express-validator");
 const router = express.Router();
 const Product = require("../database/models/Product");
 const { Op } = require("sequelize");
 const { ServerError } = require("../utils/error-messages/ServerErrors");
 const { errorFactory } = require("../utils/error/errorFactory");
 const { ProductNotFound } = require("../utils/error-messages/ProductErros");
+const {
+  validateProductSearchRules,
+  validateProductCreateRules,
+  validateProductUpdateRules,
+} = require("../middleware/Product/productRequestValidation");
+const { validateBody } = require("../middleware/validateBody");
 
 // @route GET /product/search-one/:id
 // @desc Get product by id
@@ -54,16 +59,8 @@ router.get("/", async (req, res) => {
 
 router.post(
   "/search/",
-  [check("searched_name", "Please insert a name to search").not().isEmpty()],
+  [validateProductSearchRules(), validateBody],
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-      });
-    }
-
     const { searched_name } = req.body;
     try {
       const products = await Product.findAll({
@@ -94,22 +91,8 @@ router.post(
 // @access Private
 router.post(
   "/",
-  [
-    adminAuth,
-    [
-      check("name", "Please include a name").not().isEmpty(),
-      check("category", "Please include a category").not().isEmpty(),
-      check("total_available", "Please include an integer").isInt(),
-      check("value", "Please include a floating-point value").isFloat(),
-      check("description", "Please insert a description").not().isEmpty(),
-    ],
-  ],
+  [adminAuth, validateProductCreateRules(), validateBody],
   async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     const { name, category, total_available, value, description } = req.body;
 
     try {
@@ -134,23 +117,8 @@ router.post(
 // @access Private
 router.put(
   "/:product_id",
-  [
-    adminAuth,
-    [
-      check("name", "Please include a name").not().isEmpty(),
-      check("category", "Please include a category").not().isEmpty(),
-      check("total_available", "Please include an integer").isInt(),
-      check("value", "Please include a floating-point value").isFloat(),
-      check("description", "Please insert a description").not().isEmpty(),
-    ],
-  ],
+  [adminAuth, validateProductUpdateRules(), validateBody],
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-
     const { name, category, total_available, value, description } = req.body;
     const product_id = req.params.product_id;
     try {

@@ -1,20 +1,16 @@
 const { check } = require("express-validator");
 const {
-  NameError,
   EmailError,
   PasswordError,
 } = require("../../utils/error-messages/RequestBodyErros");
 
-const validateUserCreateRules = () => {
+const validateLoginRules = () => {
   return [
-    check("name", NameError).not().isEmpty(),
     check("email", EmailError).isEmail(),
-    check("password", PasswordError).isLength({
-      min: 8,
-    }),
+    check("password", PasswordError).exists(),
   ];
 };
 
 module.exports = {
-  validateUserCreateRules,
+  validateLoginRules,
 };

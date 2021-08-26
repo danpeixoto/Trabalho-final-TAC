@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Redirect } from "react-router";
 import { connect } from "react-redux";
+import store from "../../store";
+import { setAlert } from "../../actions/alert";
 import { loadSelectedProduct, addProductToCart } from "../../actions/products";
 import Imagem1 from "../../images/produto-1.jpg";
 import Imagem2 from "../../images/produto-2.jpg";
@@ -45,7 +47,7 @@ const Product = ({
       });
       setTimeout(() => setBought(true), 500);
     } else {
-      console.log("k");
+      store.dispatch(setAlert("Faça login para poder adicionar ao carrinho"));
     }
   };
 
@@ -107,7 +109,7 @@ const Product = ({
         <h2>
           Nota média:{" "}
           {avg_likes > 0
-            ? `${avg_likes} / 5`
+            ? `${avg_likes.toFixed(2)} / 5`
             : "Nenhuma nota foi atribuida a esse produto"}
         </h2>
         <h3>Categoria: {category}</h3>

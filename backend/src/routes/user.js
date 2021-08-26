@@ -4,6 +4,10 @@ const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 
 const User = require("../database/models/User");
+const {
+  validateUserCreateRules,
+} = require("../middleware/User/userRequestValidation");
+const { validateBody } = require("../middleware/validateBody");
 const { ServerError } = require("../utils/error-messages/ServerErrors");
 const { UserExists } = require("../utils/error-messages/UserErros");
 const { errorFactory } = require("../utils/error/errorFactory");
@@ -15,22 +19,8 @@ const router = express.Router();
 // @access Public
 router.post(
   "/",
-  [
-    check("name", "Name is required").not().isEmpty(),
-    check("email", "Please include a valid email").isEmail(),
-    check("password", "Please enter a valid password").isLength({
-      min: 8,
-    }),
-  ],
+  [validateUserCreateRules(), validateBody],
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-      });
-    }
-
     const { name, password, email } = req.body;
     try {
       const userExists = await User.findOne({ where: { email } });

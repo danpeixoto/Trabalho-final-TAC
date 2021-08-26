@@ -3,7 +3,6 @@ const Sale = require("../database/models/Sale");
 const SaleItem = require("../database/models/SaleItem");
 const Product = require("../database/models/Product");
 const auth = require("../middleware/Auth/auth");
-const { check, validationResult } = require("express-validator");
 const { errorFactory } = require("../utils/error/errorFactory");
 const { ServerError } = require("../utils/error-messages/ServerErrors");
 const {
@@ -11,6 +10,10 @@ const {
   QuantityAboveAvailable,
 } = require("../utils/error-messages/SaleErros");
 const { ProductNotFound } = require("../utils/error-messages/ProductErros");
+const {
+  validateSaleCreateRules,
+} = require("../middleware/Sale/saleRequestValidation");
+const { validateBody } = require("../middleware/validateBody");
 const router = express.Router();
 
 // @route GET /sale
@@ -66,25 +69,8 @@ router.get("/:sale_id", auth, async (req, res) => {
 // @access Private
 router.post(
   "/",
-  [
-    auth,
-    [
-      check(
-        "products",
-        "Please include a valid product array, containing at least one product",
-      )
-        .isArray()
-        .isLength({ min: 1 }),
-    ],
-  ],
+  [auth, validateSaleCreateRules(), validateBody],
   async (req, res) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        errors: errors.array(),
-      });
-    }
     const { products } = req.body;
     const { id: user_id } = req.user;
     try {
@@ -99,7 +85,7 @@ router.post(
       });
 
       const saleItems = [];
-      // TODO: Verificar a existência e o total disponível de cada produto antes de criar as alterações
+
       for (let product of products) {
         let productResult = await Product.findByPk(product.id);
 
@@ -110,6 +96,9 @@ router.post(
         if (product.amount > productResult.total_available) {
           return res.status(400).json(errorFactory(QuantityAboveAvailable));
         }
+      }
+      for (let product of products) {
+        let productResult = await Product.findByPk(product.id);
 
         let saleItem = await SaleItem.create({
           sale_id: sale.id,

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setAlert } from "./alert";
 import {
   LOAD_ALL_PRODUCTS,
   LOAD_SELECTED_PRODUCT,
@@ -13,8 +14,9 @@ export const loadAllProducts = () => async (dispatch) => {
       payload: res.data,
     });
   } catch (err) {
-    console.error(err.message);
     dispatch({ type: LOAD_ALL_PRODUCTS, payload: {} });
+    const errors = err.response.data.errors;
+    errors.forEach((error) => dispatch(setAlert(error.msg)));
   }
 };
 
@@ -39,11 +41,13 @@ export const searchProductsByName = (name) => async (dispatch) => {
       type: SEARCH_PRODUCTS,
       payload: res.data,
     });
-  } catch (error) {
+  } catch (err) {
     dispatch({
       type: SEARCH_PRODUCTS,
       payload: [],
     });
+    const errors = err.response.data.errors;
+    errors.forEach((error) => dispatch(setAlert(error.msg)));
   }
 };
 
@@ -63,6 +67,8 @@ export const loadSelectedProduct = (id) => async (dispatch) => {
       type: LOAD_SELECTED_PRODUCT,
       payload: null,
     });
+    const errors = err.response.data.errors;
+    errors.forEach((error) => dispatch(setAlert(error.msg)));
   }
 };
 

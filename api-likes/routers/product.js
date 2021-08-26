@@ -43,7 +43,7 @@ const handleLike = async (req, res, next) => {
     next();
   } catch (err) {
     console.error(err.message);
-    res.send(500, "Server Error");
+    res.send(500, { errors: [{ msg: "Erro no servidor" }] });
   }
 };
 
@@ -67,7 +67,7 @@ const getItemAvgLike = async (req, res, next) => {
     res.json({ avg_likes: product.avg_likes });
   } catch (err) {
     console.error(err.message);
-    res.send(500, "Server Error");
+    res.send(500, { errors: [{ msg: "Erro no servidor" }] });
   }
 };
 

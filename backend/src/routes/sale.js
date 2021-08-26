@@ -2,8 +2,15 @@ const express = require("express");
 const Sale = require("../database/models/Sale");
 const SaleItem = require("../database/models/SaleItem");
 const Product = require("../database/models/Product");
-const auth = require("../middleware/auth");
+const auth = require("../middleware/Auth/auth");
 const { check, validationResult } = require("express-validator");
+const { errorFactory } = require("../utils/error/errorFactory");
+const { ServerError } = require("../utils/error-messages/ServerErrors");
+const {
+  SaleNotFound,
+  QuantityAboveAvailable,
+} = require("../utils/error-messages/SaleErros");
+const { ProductNotFound } = require("../utils/error-messages/ProductErros");
 const router = express.Router();
 
 // @route GET /sale
@@ -21,7 +28,7 @@ router.get("/", auth, async (req, res) => {
     res.json(sales);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server error...");
+    res.status(500).send(errorFactory(ServerError));
   }
 });
 
@@ -34,7 +41,7 @@ router.get("/:sale_id", auth, async (req, res) => {
     const sale = await Sale.findByPk(req.params.sale_id);
 
     if (!sale) {
-      return res.status(400).json({ msg: "Sale not found" });
+      return res.status(400).json(errorFactory(SaleNotFound));
     }
 
     const saleItems = await SaleItem.findAll({
@@ -50,7 +57,7 @@ router.get("/:sale_id", auth, async (req, res) => {
     });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server error...");
+    res.status(500).json(errorFactory(ServerError));
   }
 });
 
@@ -92,13 +99,16 @@ router.post(
       });
 
       const saleItems = [];
-      // TODO: pedir para o professor a melhor maneira de implementar essa parte
+      // TODO: Verificar a existência e o total disponível de cada produto antes de criar as alterações
       for (let product of products) {
         let productResult = await Product.findByPk(product.id);
+
+        if (!productResult) {
+          return res.status(400).json(errorFactory(ProductNotFound));
+        }
+
         if (product.amount > productResult.total_available) {
-          return res.status(400).json({
-            errors: [{ msg: "Quantity exceeds total available" }],
-          });
+          return res.status(400).json(errorFactory(QuantityAboveAvailable));
         }
 
         let saleItem = await SaleItem.create({
@@ -128,7 +138,7 @@ router.post(
       res.json(sale[1][0]);
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error...");
+      res.status(500).json(errorFactory(ServerError));
     }
   },
 );

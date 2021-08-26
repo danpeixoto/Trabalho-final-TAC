@@ -1,9 +1,12 @@
-const adminAuth = require("../middleware/adminAuth");
+const adminAuth = require("../middleware/Auth/adminAuth");
 const express = require("express");
 const { check, validationResult } = require("express-validator");
 const router = express.Router();
 const Product = require("../database/models/Product");
 const { Op } = require("sequelize");
+const { ServerError } = require("../utils/error-messages/ServerErrors");
+const { errorFactory } = require("../utils/error/errorFactory");
+const { ProductNotFound } = require("../utils/error-messages/ProductErros");
 
 // @route GET /product/search-one/:id
 // @desc Get product by id
@@ -14,13 +17,13 @@ router.get("/search-one/:id", async (req, res) => {
     const product = await Product.findByPk(req.params.id);
 
     if (!product) {
-      return res.status(400).json({ errors: [{ msg: "Product not found" }] });
+      return res.status(400).json(errorFactory(ProductNotFound));
     }
 
     res.json(product);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server error...");
+    res.status(500).json(errorFactory(ServerError));
   }
 });
 
@@ -41,7 +44,7 @@ router.get("/", async (req, res) => {
     res.json(products);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server error...");
+    res.status(500).json(errorFactory(ServerError));
   }
 });
 
@@ -75,15 +78,13 @@ router.post(
       });
 
       if (!products) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: "No products found..." }] });
+        return res.status(400).json(errorFactory(ProductNotFound));
       }
 
       res.json(products);
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error...");
+      res.status(500).json(ServerError);
     }
   },
 );
@@ -105,7 +106,6 @@ router.post(
   ],
   async (req, res) => {
     const errors = validationResult(req);
-    console.log("Entrei aqui");
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -170,7 +170,7 @@ router.put(
       res.json(product[1][0]);
     } catch (err) {
       console.log(err.message);
-      res.status(500).send("Server error...");
+      res.status(500).json(errorFactory(ServerError));
     }
   },
 );

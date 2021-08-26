@@ -4,7 +4,10 @@ const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 
 const User = require("../database/models/User");
-const auth = require("../middleware/auth");
+const auth = require("../middleware/Auth/auth");
+const { InvalidCredentials } = require("../utils/error-messages/AuthErrors");
+const { ServerError } = require("../utils/error-messages/ServerErrors");
+const { errorFactory } = require("../utils/error/errorFactory");
 
 const router = express.Router();
 
@@ -19,9 +22,7 @@ router.get("/", auth, async (req, res) => {
     res.json(user);
   } catch (error) {
     console.log(error.message);
-    res.status(500).json({
-      msg: "Server error",
-    });
+    res.status(500).json(errorFactory(ServerError));
   }
 });
 
@@ -32,8 +33,8 @@ router.get("/", auth, async (req, res) => {
 router.post(
   "/",
   [
-    check("email", "Please include a valid email").isEmail(),
-    check("password", "Please include a password").exists(),
+    check("email", "Inclua um email válido").isEmail(),
+    check("password", "Inclua uma senha").exists(),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -48,23 +49,11 @@ router.post(
     try {
       const user = await User.findOne({ where: { email } });
       if (!user) {
-        return res.status(400).json({
-          errors: [
-            {
-              msg: "Invalid credentials",
-            },
-          ],
-        });
+        return res.status(400).json(errorFactory(InvalidCredentials));
       }
 
       if (user.password !== password) {
-        return res.status(400).json({
-          errors: [
-            {
-              msg: "Invalid credentials",
-            },
-          ],
-        });
+        return res.status(400).json(errorFactory(InvalidCredentials));
       }
 
       const payload = {
@@ -87,7 +76,7 @@ router.post(
       );
     } catch (err) {
       console.error(err.message);
-      res.status(500).send("Server error...");
+      res.status(500).json(errorFactory(ServerError));
     }
   },
 );

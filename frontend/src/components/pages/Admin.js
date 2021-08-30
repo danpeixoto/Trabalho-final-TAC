@@ -37,7 +37,7 @@ const Admin = ({ isAuthenticated, isAdmin, isLoading }) => {
     return <div>Estamos validando suas credenciais</div>;
   }
 
-  if (!isAuthenticated && isAdmin.length < 10) {
+  if (!isAuthenticated || isAdmin == "no") {
     return <Redirect to="/" />;
   }
   return (
